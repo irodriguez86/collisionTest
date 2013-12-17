@@ -5,14 +5,10 @@
 var stage = undefined;
 
 function init(){
-    var canvas = document.getElementById("canvas");
+    var canvas = document.getElementById("canvasTest");
     canvas.width = 1024;
     canvas.height = 768;
-    stage = createjs.Stage(canvas);
-}
-function main() {
-    init();
-    drawExample();
+    stage = new createjs.Stage(canvas);
 }
 function drawExample() {
     var circle = new createjs.Shape();
@@ -20,6 +16,10 @@ function drawExample() {
     circle.x = 100;
     circle.y = 100;
     stage.addChild(circle);
+    stage.update();
 }
 
-main();
+function main() {
+    init();
+    drawExample();
+}

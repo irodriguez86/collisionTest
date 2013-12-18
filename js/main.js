@@ -25,6 +25,7 @@ function init(){
     canvas.height = 768;
     stage = new createjs.Stage(canvas);
 
+    //TODO Create decent preload
     queue = new createjs.LoadQueue();
     //queue.installPlugin(createjs.Sound);
     queue.on("complete", drawExample, this);
@@ -62,4 +63,5 @@ function getRandomInt (min, max) {
 
 function main() {
     init();
+    //TODO create container
 }

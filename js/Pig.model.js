@@ -15,15 +15,15 @@ var Pig = function () {
             if (this.finalX > canvas.width/2 && pigs.length < gameConfig.maxPigs) pigs[pigs.length] = new Pig().travel();
             if (this.finalX > canvas.width + gameConfig.pig.width){
                 this.finalX = this.finalY = 0;
-                this.container.x = -gameConfig.pig.width-50;
-                this.restart = -100;
                 this.container.scaleX = this.container.scaleY = getRandomInt(50,150)/100;
+                this.container.x = -(gameConfig.pig.width*2);
+                this.restart = -100;
                 this.travel();
             } else {
                 this.finalX += getRandomInt(180,200);
                 if (this.bounce) {
                     this.finalY -= getRandomInt(20,80);
-                        if (this.finalY - gameConfig.pig.height < 0) this.finalY = gameConfig.pig.height;
+                        if (this.finalY - gameConfig.pig.height < 0) this.finalY = gameConfig.pig.height*this.container.scaleX;
                     this.bounce = false;
                 } else {
                     this.bounce = true;

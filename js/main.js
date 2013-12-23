@@ -1,42 +1,103 @@
 /**
  * Created by IVY-CORP-PC001 on 17/12/13.
  */
-
+//github with advanced collision detection https://github.com/olsn/Collision-Detection-for-EaselJS
 var gameConfig = {
     pig: {
         width: 86,
         height: 64
     },
-    maxPigs: 5
+    maxPigs: 5,
+    loader: {
+        loadProgressLabel: undefined,
+        loadingBarContainer: undefined,
+        loadingBarHeight: 20,
+        loadingBarWidth: 300,
+        LoadingBarColor: createjs.Graphics.getRGB(0,0,0),
+        frame: undefined,
+        padding: undefined
+    }
 }
 
 var pigs = [0];
 var stage = undefined;
 var canvas = undefined;
-var circle,circle2,pig;
 var queue;
-var prueba = undefined;
 
+function createPreloadScreen(){
+    gameConfig.loader.loadProgressLabel = new createjs.Text("","18px Verdana","black"); // create the text
+    gameConfig.loader.loadProgressLabel.lineWidth = 200;
+    gameConfig.loader.loadProgressLabel.textAlign = "center";
+    gameConfig.loader.loadProgressLabel.x = canvas.width/2;
+    gameConfig.loader.loadProgressLabel.y = 50;
+    stage.addChild(gameConfig.loader.loadProgressLabel);
+    gameConfig.loader.loadingBarContainer = new createjs.Container();
 
-function init(){
+    //create the loading bar
+    gameConfig.loader.loadingBar = new createjs.Shape();
+    gameConfig.loader.loadingBar.graphics.beginFill(gameConfig.loader.LoadingBarColor).drawRect(0, 0, 1,
+        gameConfig.loader.loadingBarHeight).endFill();
 
-    canvas = document.getElementById("canvasTest");
-    canvas.width = 1024;
-    canvas.height = 768;
-    stage = new createjs.Stage(canvas);
+    //create the frame
+    gameConfig.loader.frame = new createjs.Shape();
+    gameConfig.loader.padding = 3;
+    gameConfig.loader.frame.graphics.setStrokeStyle(1).beginStroke(gameConfig.loader.LoadingBarColor).
+        drawRect(-gameConfig.loader.padding/2, -gameConfig.loader.padding/2, gameConfig.loader.
+            loadingBarWidth+gameConfig.loader.padding, gameConfig.loader.loadingBarHeight+gameConfig.loader.padding);
 
-    //TODO Create decent preload
+    //create container and add it to canvas
+    gameConfig.loader.loadingBarContainer.addChild(gameConfig.loader.loadingBar, gameConfig.loader.frame);
+    gameConfig.loader.loadingBarContainer.x = Math.round(canvas.width/2 - gameConfig.loader.loadingBarWidth/2);
+    gameConfig.loader.loadingBarContainer.y = 100;
+    stage.addChild(gameConfig.loader.loadingBarContainer);
+}
+
+function handleProgress(event) {
+    gameConfig.loader.loadingBar.scaleX = queue.progress * gameConfig.loader.loadingBarWidth;
+
+    var progressPercentage = Math.round(queue.progress*100);
+    gameConfig.loader.loadProgressLabel.text = progressPercentage + "% Loaded" ;
+
+    stage.update();
+}
+function handleComplete(event) {
+    gameConfig.loader.loadProgressLabel.text = "Loading complete click to start";
+    stage.update();
+
+    canvas.addEventListener("click", init);
+}
+
+function preload() {
+    createPreloadScreen();
+
     queue = new createjs.LoadQueue();
-    //queue.installPlugin(createjs.Sound);
-    queue.on("complete", drawExample, this);
-    //queue.loadFile({id:"sound", src:"http://path/to/sound.mp3"});
+
+    createjs.Sound.alternateExtensions = ["mp3"];
+    queue.installPlugin(createjs.Sound);
+
+    queue.on("complete", handleComplete, this);
+    queue.on("progress", handleProgress, this);
+
     queue.loadManifest([
         {id: "pig1", src:"img/pig.png"},
+        {id: "background", src:"img/backgroundFarm.png"},
         {id: "pig2", src:"img/Flying-Pig-Logo.png"},
-        {id: "far",  src:"img/backgroundFarm.png"}
+        {id:"soundPig1", src:"sound/pig1.mp3"}
     ]);
+}
+
+function init(){
+    canvas.style.backgroundImage = "url('img/backgroundFarm.png')";
+    canvas.style.size = "cover";
 
     createjs.Ticker.setFPS(25);
+
+    //remove preloadScreen and the bind
+    stage.removeChild(gameConfig.loader.loadProgressLabel, gameConfig.loader.loadingBarContainer);
+    canvas.removeEventListener("click", init);
+
+    drawPig();
+    createjs.Ticker.addEventListener('tick',tick);
 
 }
 
@@ -47,21 +108,18 @@ function tick(event) {
     })
 
 }
-function drawExample() {
-
+function drawPig() {
     pigs[0] = new Pig().travel();
     stage.update(event);
-
-
-
-//    createjs.Tween.get(pig).to({x: canvas.width + gameConfig.pig.width/2, y: gameConfig.pig.height/2 + 20, rotation: 360}, 2000);
-    createjs.Ticker.addEventListener('tick',tick);
 }
+
 function getRandomInt (min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function main() {
-    init();
+    canvas = document.getElementById("canvasTest");
+    stage = new createjs.Stage(canvas);
+    preload();
     //TODO create container
 }

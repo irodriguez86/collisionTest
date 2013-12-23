@@ -45,6 +45,7 @@ var Pig = function () {
         this.img.set({regX: width,regY: height,x: width + 20,y: height + 20})
         this.container.addChild(this.img);
         stage.addChild(this.container);
+        this.container.addEventListener("click", function(event) { createjs.Sound.play("soundPig1"); })
         return this;
     };
     this.show = function() {
@@ -55,6 +56,11 @@ var Pig = function () {
         this.container.visible = false;
         return this;
     };
+    this.checkIntersection = function(rect1,rect2) {
+        if ( rect1.x >= rect2.x + rect2.width || rect1.x + rect1.width <= rect2.x || rect1.y >= rect2.y + rect2.height ||
+             rect1.y + rect1.height <= rect2.y ) return false;
+        return true;
+    }
     this.init();
     return this;
 }

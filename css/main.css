@@ -1,7 +1,3 @@
 #canvasTest {
-    width:1024px;
-    height: 768px;
     border: 1px solid black;
-    background-image: url("../img/backgroundFarm.png");
-    background-size: cover;
 }

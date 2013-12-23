@@ -17,7 +17,7 @@ var gameConfig = {
         frame: undefined,
         padding: undefined
     }
-}
+};
 
 var pigs = [0];
 var stage = undefined;
@@ -29,7 +29,7 @@ function createPreloadScreen(){
     gameConfig.loader.loadProgressLabel.lineWidth = 200;
     gameConfig.loader.loadProgressLabel.textAlign = "center";
     gameConfig.loader.loadProgressLabel.x = canvas.width/2;
-    gameConfig.loader.loadProgressLabel.y = 50;
+    gameConfig.loader.loadProgressLabel.y = canvas.height/2 - 60;
     stage.addChild(gameConfig.loader.loadProgressLabel);
     gameConfig.loader.loadingBarContainer = new createjs.Container();
 
@@ -48,7 +48,7 @@ function createPreloadScreen(){
     //create container and add it to canvas
     gameConfig.loader.loadingBarContainer.addChild(gameConfig.loader.loadingBar, gameConfig.loader.frame);
     gameConfig.loader.loadingBarContainer.x = Math.round(canvas.width/2 - gameConfig.loader.loadingBarWidth/2);
-    gameConfig.loader.loadingBarContainer.y = 100;
+    gameConfig.loader.loadingBarContainer.y = Math.round(canvas.height/2 - gameConfig.loader.loadingBarHeight/2);
     stage.addChild(gameConfig.loader.loadingBarContainer);
 }
 
@@ -88,7 +88,7 @@ function preload() {
 
 function init(){
     canvas.style.backgroundImage = "url('img/backgroundFarm.png')";
-    canvas.style.size = "cover";
+    canvas.style.backgroundSize = "cover";
 
     createjs.Ticker.setFPS(25);
 

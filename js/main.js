@@ -2,6 +2,8 @@
  * Created by IVY-CORP-PC001 on 17/12/13.
  */
 //github with advanced collision detection https://github.com/olsn/Collision-Detection-for-EaselJS
+
+var wagonObj;
 var gameConfig = {
     pig: {
         width: 86,
@@ -82,7 +84,8 @@ function preload() {
         {id: "pig1", src:"img/pig.png"},
         {id: "background", src:"img/backgroundFarm.png"},
         {id: "pig2", src:"img/Flying-Pig-Logo.png"},
-        {id:"soundPig1", src:"sound/pig1.mp3"}
+        {id:"soundPig1", src:"sound/pig1.mp3"},
+        {id:"wagon", src:"img/sprite_car.png"}
     ]);
 }
 
@@ -97,6 +100,7 @@ function init(){
     canvas.removeEventListener("click", init);
 
     drawPig();
+    wagonObj = new Wagon();
     createjs.Ticker.addEventListener('tick',tick);
 
 }
@@ -107,10 +111,26 @@ function tick(event) {
        pig.restart++;
     })
 
+    document.onkeydown = handleKeydown;
+    document.onkeyup = handleKeyup;
+
 }
+
+function handleKeydown (e) {
+    if(e.keyCode == 37){
+        wagonObj.move('left')
+    }else if(e.keyCode == 39){
+        wagonObj.move('right')
+    }
+}
+
+function handleKeyup () {
+    wagonObj.stop();
+}
+
 function drawPig() {
     pigs[0] = new Pig().travel();
-    stage.update(event);
+    //stage.update(event);
 }
 
 function getRandomInt (min, max) {
